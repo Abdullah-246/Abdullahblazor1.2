@@ -1,0 +1,37 @@
+﻿@page "/learnBlazor/parentComponent"
+
+<h3>Parent Child Relation</h3>
+
+<CascadingValue Value="@MessageForGrandChild" Name="message">
+    <CascadingValue Value="@LuckyNumber" Name="luckyNumber">
+<_ChildComponent @ref="childComp" OnButtonClick="showMessage" Title="This title is passed as parameter from Parent Component"
+>
+    <ChildContent> Render Fragment from Parent! WooHoo!</ChildContent>
+    <DangerChildContent>Danger Content from Render Fragement! WooHoo!</DangerChildContent>
+</_ChildComponent>
+</CascadingValue>
+</CascadingValue>
+
+<p><b>@messageText</b></p>
+<_AnotherChildComponent placeholder="Placeholder From Parent"></_AnotherChildComponent>
+
+<div class="row">
+    <button class="btn btn-success" @onclick="()=>childComp.ToastrSuccess()" >Show Sweet Alert</button>
+</div>
+
+@*<_ChildComponent Title="This is second child component">
+</_ChildComponent>*@
+
+
+@code {
+    private _ChildComponent childComp;
+
+
+    public string MessageForGrandChild = "This message is from your grand parent (ParentComponent)";
+    public string LuckyNumber = "7";
+    public string messageText = "";
+    private void showMessage()
+    {
+        messageText = "Abdullah button clicked from Child Component";
+    }
+}
