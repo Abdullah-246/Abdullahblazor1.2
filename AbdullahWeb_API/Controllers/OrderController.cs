@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Stripe.Checkout;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace AbdullahWeb_API.Controllers
 {
@@ -12,10 +13,12 @@ namespace AbdullahWeb_API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IEmailSender _emailSender;
 
-        public OrderController(IOrderRepository orderRepository)
+        public OrderController(IOrderRepository orderRepository,IEmailSender emailSender)
         {
             _orderRepository = orderRepository;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -66,7 +69,11 @@ namespace AbdullahWeb_API.Controllers
             var sessionDetails = service.Get(orderHeaderDTO.SessionId);
             if (sessionDetails.PaymentStatus == "paid")
             {
-                var result = await _orderRepository.MarkPaymentSuccessful(orderHeaderDTO.Id);
+                
+                var result = await _orderRepository.MarkPaymentSuccessful(orderHeaderDTO.Id,
+                   sessionDetails.PaymentIntentId);
+                await _emailSender.SendEmailAsync(orderHeaderDTO.Email, "QuantumCart Order Confirmation",
+                    "New Order has been created :" + orderHeaderDTO.Id);
                 if (result == null)
                 {
                     return BadRequest(new ErrorModelDTO()

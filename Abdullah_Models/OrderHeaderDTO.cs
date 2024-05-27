@@ -50,6 +50,9 @@ namespace Abdullah_Models
         [Display(Name ="Postal Code")]
         public string PostalCode { get; set; }
 
-    public string Email { get; set; }
+        public string Email { get; set; }
+
+        public string? Tracking { get; set; }
+        public string? Carrier { get; set; }
     }
 }

@@ -12,20 +12,28 @@
 
 @if (IsProcessing)
 {
-
-
     <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
         <img src="images/ajax-loader.gif" />
     </div>
 }
 else
 {
+    <select @onchange=FilterCategory>
+        <option value="0">All</option>
+        @foreach (var categories in Categories)
+        {
+            <option value="@categories.Id"><p>@categories.Name</p></option>
+        }
+    </select>
+
+
     <div class="container">
         <div class="row  pb-3 pt-3 backgroundWhite">
-            @foreach(var category in Products.Select(u=>u.Category.Name).Distinct()){
+            @foreach (var category in FilteredProducts.Select(u => u.Category.Name).Distinct())
+            {
             <h2 class="text-success pl-1"><b>@category</b></h2>
 
-                @foreach (var product in Products.Where(u => u.Category.Name == category))
+                @foreach (var product in FilteredProducts.Where(u => u.Category.Name == category))
                 {
                     <div class="col-lg-4 col-md-6 pb-4 filter">
                         <div class="card bg-white rounded shadow-sm" style="border:1px solid #222">
@@ -59,15 +67,43 @@ else
     </div>
 }
 
+<style>
+    select {
+        word-wrap: normal;
+        min-width: 144px;
+        padding: 11px 12px;
+        background: #212529;
+        color: white;
+    }
+
+</style>
+
 
 @code{
     public bool IsProcessing { get; set; } = false;
     public IEnumerable<ProductDTO> Products { get; set; } = new List<ProductDTO>();
+    public IEnumerable<ProductDTO> FilteredProducts { get; set; } = new List<ProductDTO>();
+    public List<CategoryDTO> Categories = new();
+    public int SelectedCategoryId = 0;
 
     protected override async Task OnInitializedAsync()
     {
         IsProcessing = true;
         Products = await _productService.GetAll();
+        FilteredProducts = Products.ToList();
         IsProcessing = false;
+        Categories = Products.Select(x => x.Category).DistinctBy(d => d.Id).ToList();
+    }
+
+    public void FilterCategory(ChangeEventArgs e)
+    {
+        if (e.Value.ToString() == "0")
+        {
+            FilteredProducts = Products.ToList();
+        }
+        else
+        {
+            FilteredProducts = Products.Where(x => x.CategoryId.ToString() == e.Value.ToString()).ToList();
+        }
     }
 }
