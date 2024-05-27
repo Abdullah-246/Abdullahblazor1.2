@@ -1,5 +1,7 @@
 ﻿using Abdullah_Buisness.Repository.IRepository;
+using Abdullah_Common;
 using Abdullah_Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;

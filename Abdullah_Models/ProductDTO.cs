@@ -22,9 +22,9 @@ namespace Abdullah_Models
         [Range(1,int.MaxValue,ErrorMessage ="Please select a category")]
         public int CategoryId { get; set; }
         public CategoryDTO Category { get; set; }
-        public double Price { get; set; }
-        public string Size { get; set; }
-        public int ProductId { get; set; }
+        //public double Price { get; set; }
+        //public string Size { get; set; }
+        //public int ProductId { get; set; }
         public ICollection<ProductPriceDTO>ProductPrices { get; set; }
     }
 }

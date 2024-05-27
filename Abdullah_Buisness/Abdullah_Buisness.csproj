@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Abdullah_Common\Abdullah_Common.csproj" />
     <ProjectReference Include="..\Abdullah_DataAccess\Abdullah_DataAccess.csproj" />
     <ProjectReference Include="..\Abdullah_Models\Abdullah_Models.csproj" />
   </ItemGroup>

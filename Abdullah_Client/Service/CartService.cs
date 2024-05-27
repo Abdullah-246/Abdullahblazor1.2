@@ -8,6 +8,7 @@ namespace Abdullah_Client.Service
     public class CartService : ICartService
     {
         private readonly ILocalStorageService _localStorage;
+        public event Action OnChange;
         public CartService(ILocalStorageService localStorageService)
         {
             _localStorage = localStorageService;
@@ -40,6 +41,7 @@ namespace Abdullah_Client.Service
                 });
             }
             await _localStorage.SetItemAsync(SD.ShoppingCart, cart);
+            OnChange.Invoke();
         }
         public async Task DecrementCart(ShoppingCart cartToDecrement)
         {
@@ -49,7 +51,7 @@ namespace Abdullah_Client.Service
             {
                 if (cart[i].ProductId == cartToDecrement.ProductId && cart[i].ProductPriceId == cartToDecrement.ProductPriceId)
                 {
-                    if (cart[i].Count == 1 || cart[i].Count == 0)
+                    if (cart[i].Count == 1 || cartToDecrement.Count == 0)
                     {
                         cart.Remove(cart[i]);
                     }
@@ -61,6 +63,7 @@ namespace Abdullah_Client.Service
             }
             
             await _localStorage.SetItemAsync(SD.ShoppingCart, cart);
+            OnChange.Invoke();
         }
     }
 }
